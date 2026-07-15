@@ -756,7 +756,7 @@ body {
         <input type="email" id="f-email" placeholder="seu@email.com" autocomplete="email">
         <div class="erro-msg" id="e-email">Informe um e-mail válido.</div>
       </div>
-      <button class="btn-cap" onclick="submeterCaptura()">Continuar a investigação →</button>
+      <div id="lgpd-aviso" style="margin:16px 0;padding:14px;border:1px solid #d9d2c2;border-radius:8px;font-size:13px;line-height:1.5;color:#3a3a3a;text-align:left;"><p style="margin:0 0 10px 0;">Antes de continuar: os dados que voce informar (nome, contato e suas respostas) sao tratados por <strong>Ivan Vianna, CFP</strong> (CNPJ 56.099.913/0001-61) para gerar o seu resultado e, caso autorize, para contato sobre este diagnostico. Nao coletamos dados sensiveis (Art. 5 II, LGPD). Solicitacoes de acesso, correcao ou eliminacao: <a href="mailto:ivan@ivanviannafinancas.com.br">ivan@ivanviannafinancas.com.br</a>.</p><label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;cursor:pointer;"><input type="checkbox" id="lgpd-consent-dados" style="margin-top:3px;"><span>Autorizo o tratamento dos dados informados para gerar meu resultado e para contato sobre este diagnostico. <strong>(obrigatorio)</strong></span></label><label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;"><input type="checkbox" id="lgpd-consent-marketing" style="margin-top:3px;"><span>Tambem quero receber conteudo sobre planejamento financeiro e o Metodo VIDA por e-mail/WhatsApp. <strong>(opcional)</strong></span></label></div><button class="btn-cap" onclick="if(!document.getElementById('lgpd-consent-dados').checked){alert('Marque a autorizacao de tratamento de dados para continuar.');return;}submeterCaptura()">Continuar a investigação →</button>
       <div class="cap-priv">Seus dados são usados exclusivamente para entrega do relatório e contato pelo Método VIDA™.</div>
     </div>
   </div>
@@ -1169,7 +1169,7 @@ function submeterCaptura() {
   fetch(WEBHOOK, {
     method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...leadData, instrumento: 'IVAD_Discovery', etapa: 'captura' })
+    body: JSON.stringify({ ...leadData, instrumento: 'IVAD_Discovery', etapa: 'captura', consentimento_dados:document.getElementById('lgpd-consent-dados').checked,consentimento_marketing:(document.getElementById('lgpd-consent-marketing')||{}).checked||false,versao_politica_privacidade:'2026-07-14' })
   }).catch(() => {});
 
   document.getElementById('captura-wrap').style.display = 'none';
@@ -1207,7 +1207,7 @@ function calcularEMostrar() {
     dim_aversao_arrependimento: scoresFinais[3],
     dim_contabilidade_mental: scoresFinais[4],
     mecanismo_mais_saliente: mecanismo,
-    mecanismo_score: scoreMax
+    mecanismo_score: scoreMax,consentimento_dados:document.getElementById('lgpd-consent-dados').checked,consentimento_marketing:(document.getElementById('lgpd-consent-marketing')||{}).checked||false,versao_politica_privacidade:'2026-07-14'
   };
 
   fetch(WEBHOOK, {
